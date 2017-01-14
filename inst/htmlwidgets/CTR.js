@@ -84,9 +84,20 @@ var nodeEnter = node.enter().append("g")
  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
  .on("click", click);
 
-nodeEnter.append("circle")
+// Original Code //
+/* nodeEnter.append("circle")
  .attr("r", 1e-6)
- .style({"fill": function(d) { return d._children ? x.options.color1 : x.options.color2}, "stroke": x.options.color3, "stroke-width":"1.5px"});
+ .style({"fill": function(d) { return d._children ? x.options.color1 : x.options.color2}, "stroke": x.options.color3, "stroke-width":"1.5px"}); */
+ 
+ // New Code //
+nodeEnter.append("circle")
+  .attr("r", 1e-6)
+  .style({"fill": function(d) {
+    if(d.type == "winner") return x.options.color_active;
+    if(d.type == "other") return x.options.color_nonactive;
+    else return d._children ? x.options.color1 : x.options.color2},
+    "stroke": x.options.color3, "stroke-width":"1.5px"
+  });
 
 nodeEnter.append("text")
  .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
@@ -101,9 +112,19 @@ var nodeUpdate = node.transition()
  .duration(duration)
  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
-nodeUpdate.select("circle")
+// Original Code //
+/* nodeUpdate.select("circle")
  .attr("r", 4.5)
- .style("fill", function(d) { return d._children ? x.options.color1 : x.options.color2; });
+ .style("fill", function(d) { return d._children ? x.options.color1 : x.options.color2; }); */
+
+// New Code //
+nodeUpdate.select("circle")
+  .attr("r", 4.5)
+  .style("fill", function(d) {
+    if(d.type == "winner") return x.options.color_active;
+    if(d.type == "other") return x.options.color_nonactive;
+    else return d._children ? x.options.color1 : x.options.color2;
+});
 
 nodeUpdate.select("text")
  .style("fill-opacity", 1);
@@ -123,7 +144,7 @@ nodeExit.select("text")
 // Update the links.
 var link = svg.selectAll("path.link")
  .data(links, function(d) { return d.target.id; })
- .style({"fill": "none", "stroke": x.options.color4, "stroke-width": "1.5px"});
+ .style({"fill": "none", "stroke": x.options.color4, "stroke-width": x.options.link_width});
 
 // Enter any new links at the parent's previous position.
 link.enter().insert("path", "g")
@@ -132,18 +153,18 @@ link.enter().insert("path", "g")
 	 var o = {x: source.x0, y: source.y0};
 	 return diagonal({source: o, target: o});
 	 })
- .style({"fill": "none", "stroke": x.options.color4, "stroke-width": "1.5px"});
+ .style({"fill": "none", "stroke": x.options.color4, "stroke-width": x.options.link_width});
 
 // Transition links to their new position.
 link.transition()
  .duration(duration)
  .attr("d", diagonal)
- .style({"fill": "none", "stroke": x.options.color4, "stroke-width": "1.5px"});
+ .style({"fill": "none", "stroke": x.options.color4, "stroke-width": x.options.link_width});
 
 // Transition exiting nodes to the parent's new position.
 link.exit().transition()
  .duration(duration)
- .style({"fill": "none", "stroke": x.options.color4, "stroke-width": "1.5px"})
+ .style({"fill": "none", "stroke": x.options.color4, "stroke-width": x.options.link_width})
  .attr("d", function(d) {
  var o = {x: source.x, y: source.y};
  return diagonal({source: o, target: o});

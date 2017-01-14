@@ -32,7 +32,10 @@ CTR <- function(data,
                 color1 = "lightsteelblue",
                 color2 = "#fff",
                 color3 = "steelblue",
-                color4 = "#ccc")
+                color4 = "#ccc",
+                color_active = "red",
+                color_nonactive ="green",
+                link_width = "1.5px")
 {
     
     # create options
@@ -42,7 +45,10 @@ CTR <- function(data,
         color1 = color1,
         color2 = color2, 
         color3 = color3,
-        color4 = color4
+        color4 = color4,
+        color_active = color_active,
+        color_nonactive = color_nonactive,
+        link_width = link_width
     )
     
     # create widget
